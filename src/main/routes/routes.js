@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import HelloWorld from "../views"
+import Header from "../components/header";
 const Routes = () => (
     <BrowserRouter>
     <Switch>
-        <Route exact path='/' component={HelloWorld}/>
+        <Route exact path='/' component={Header}/>
         <Route path='*'>
         </Route>
     </Switch>
