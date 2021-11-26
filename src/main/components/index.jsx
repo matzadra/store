@@ -1,14 +1,18 @@
 import React from "react";
 import Header from ".";
+import ProductList from "./product_listing";
+import { Fragment } from "react";
 
 class Main extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+     super(props);
+  }
 
   render() {
     return (
-      <Header/>
+      <Fragment>
+      <ProductList/>
+      </Fragment>
     );
   }
 }
