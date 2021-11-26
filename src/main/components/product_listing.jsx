@@ -1,46 +1,75 @@
 import React, { Fragment } from "react";
 import { getProductsId } from "../services/product"
-import Header from "./header";
+
 //import styled from "styled-components";
 
 class ProductList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data: { categories : [] } };
+    this.handleClick = this.handleClick.bind(this)
   }
 
   async componentDidMount() {
     const response = await getProductsId();
     this.setState({ data: response });
-    console.log(response);
   }
-  
+
+  buildFilteredCategoryProducts(categoryParam) {
+    //filtrar categories ( vou passar clothes e techs, aqui vc passa qual category quer)
+    const filteredCategories = this.state.data.categories.filter(fil => fil.name === categoryParam);
+
+    let categoryProducts = [];
+
+    //percorrer filtered. Pode ser com for.
+    filteredCategories.forEach(category => {
+      //percorrer products. Pode ser com for.
+      category.products.forEach(product => {
+        const categoryProduct = (<div key= {product.id} >
+          {`${category.name} ${product.id}`}
+        </div>);
+
+        //adicionando div no array. Return vai quebrar a stack e sair do loop.
+        categoryProducts.push(categoryProduct);
+      })
+    })
+    return categoryProducts;
+  } 
+
+  teste(){
+    
+  }
+  buildCategoryProducts() {
+    //filtrar categories ( vou passar clothes e techs, aqui vc passa qual category quer)
+    const filteredCategories = this.state.data.categories;
+
+    let categoryProducts = [];
+
+    //percorrer filtered. Pode ser com for.
+    filteredCategories.forEach(category => {
+      //percorrer products. Pode ser com for.
+      category.products.forEach(product => {
+        const categoryProduct = (<div key= {product.id} >
+          {`${category.name} ${product.id}`}
+        </div>);
+
+        //adicionando div no array. Return vai quebrar a stack e sair do loop.
+        categoryProducts.push(categoryProduct);
+      })
+    })
+    return categoryProducts;
+  }  
+
+  handleClick(){
+    this.setState({ data: { categories: [] } })
+  }
+
 
   render() {
     return (
       <Fragment>
-          <Header/>
         <div>
-          {this.state.data.categories.map((element) => {
-               for (let el in element.products){
-                   console.log(element.products)
-                  var categoryName= element.name;
-                  var prodId = element.products[el].id;     
-                  console.log(categoryName, prodId);    
-
-                //   return(
-                //     <div key={prodId}>
-                //     {categoryName + " " + prodId}
-                //     </div>
-                //     ) 
-
-                
-                  } 
-                                                      
-        }
-        
-        )}
-        
+          {this.buildCategoryProducts()}
         </div>
       </Fragment>
     );

@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { getCategoriesList } from "../services/categories";
 //import styled from "styled-components";
+import ProductList from "../components/product_listing";
 
 class Header extends React.Component {
   constructor(props) {
@@ -12,7 +13,6 @@ class Header extends React.Component {
     const response = await getCategoriesList();
     this.setState({ data: response });
   }
-  
 
   render() {
     return (
@@ -20,7 +20,7 @@ class Header extends React.Component {
         <div>
           {this.state.data.categories.map((element, index) => {
             return (
-            <button key={index}>
+            <button key={index} onClick={this.props.category}>
               {element.name.toUpperCase()}
             </button>
             )

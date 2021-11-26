@@ -1,5 +1,5 @@
 import React from "react";
-import Header from ".";
+import Header from "./header";
 import ProductList from "./product_listing";
 import { Fragment } from "react";
 
@@ -11,6 +11,7 @@ class Main extends React.Component {
   render() {
     return (
       <Fragment>
+      <Header/>
       <ProductList/>
       </Fragment>
     );
