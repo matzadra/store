@@ -1,6 +1,5 @@
 import React from "react";
-import Header from "./header";
-import ProductList from "./product_listing";
+import ProductListing from "./ProductListing";
 import { Fragment } from "react";
 
 class Main extends React.Component {
@@ -11,8 +10,7 @@ class Main extends React.Component {
   render() {
     return (
       <Fragment>
-      <Header/>
-      <ProductList/>
+      <ProductListing/>
       </Fragment>
     );
   }
