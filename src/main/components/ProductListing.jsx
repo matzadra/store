@@ -9,16 +9,24 @@ class ProductListing extends React.Component {
     this.state = {
       category: { data: { categories: [] } },
       product: { data: { categories: [] } },
+      filteredProduct: { data: { categories: [] } },
     };
     this.handleEvent = this.handleEvent.bind(this);
   }
 
-  
-
-  handleEvent(event) {
+  async handleEvent(event) {
+    var prodArr = []
     const testName = event.target.id;
-    return this.buildFilteredCategoryProducts(testName);
-  };
+    const testeDois = this.buildFilteredCategoryProducts(testName);
+    await this.setState({ filteredProduct: { data: testeDois } });
+    this.state.filteredProduct.data.map(item => {
+        prodArr.push(item.key)
+    }) 
+    console.log(prodArr)
+    return prodArr
+    }
+    
+
 
   async componentDidMount() {
     const categoriesResponse = await getCategoriesList();
@@ -26,16 +34,12 @@ class ProductListing extends React.Component {
     this.setState({ category: { data: categoriesResponse } });
     this.setState({ product: { data: productsResponse } });
   }
-  
+
   getCategories() {
     return this.state.category.data.categories.map((element) => {
       const elName = element.name;
       return (
-        <button
-          id={elName}
-          key={elName}
-          onClick = {this.handleEvent}
-        >
+        <button id={elName} key={elName} onClick={this.handleEvent}>
           {elName.toUpperCase()}
         </button>
       );
@@ -46,28 +50,42 @@ class ProductListing extends React.Component {
     const filteredCategories = this.state.product.data.categories.filter(
       (fil) => fil.name === categoryParam
     );
-
     let categoryProducts = [];
-
     filteredCategories.forEach((category) => {
       category.products.forEach((product) => {
-        
         const categoryProduct = (
           <div key={product.id}>{`${category.name} ${product.id}`}</div>
         );
-
         categoryProducts.push(categoryProduct);
       });
     });
     return categoryProducts;
-
   }
 
-  render() {
+  buildCategoryProducts() {
+    const filteredCategories = this.state.product.data.categories;
+    let categoryProducts = [];
+    filteredCategories.forEach((category) => {
+      category.products.forEach((product) => {
+        const categoryProduct = (
+          <div key={product.id}>{`${category.name} ${product.id}`}</div>
+        );
+        categoryProducts.push(categoryProduct);
+      });
+    });
+    return categoryProducts;
+  }
+
+   buildProductArr(){
+    for (let i=0 ; i<this.state.filteredProduct.data.length ; i++ ){
+      return this.state.filteredProduct.data[i];
+    }
+  }
+   render() {
     return (
       <Fragment>
         <div>{this.getCategories()}</div>
-        
+        <div>{this.buildProductArr()}</div>
       </Fragment>
     );
   }
