@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { getProductsId } from "../services/product";
 import { getCategoriesList } from "../services/categories";
-//import styled from "styled-components";
+import styled from "styled-components";
 
 class ProductListing extends React.Component {
   constructor(props) {
@@ -9,30 +9,45 @@ class ProductListing extends React.Component {
     this.state = {
       category: { data: { categories: [] } },
       product: { data: { categories: [] } },
-      filteredProduct: { data: { categories: [] } },
+      filteredProduct: { data: { categories: [] } }
     };
     this.handleEvent = this.handleEvent.bind(this);
   }
 
-  async handleEvent(event) {
-    var prodArr = []
-    const testName = event.target.id;
-    const testeDois = this.buildFilteredCategoryProducts(testName);
-    await this.setState({ filteredProduct: { data: testeDois } });
-    this.state.filteredProduct.data.map(item => {
-        prodArr.push(item.key)
-    }) 
-    console.log(prodArr)
-    return prodArr
-    }
-    
-
-
   async componentDidMount() {
     const categoriesResponse = await getCategoriesList();
     const productsResponse = await getProductsId();
-    this.setState({ category: { data: categoriesResponse } });
-    this.setState({ product: { data: productsResponse } });
+    this.setState({
+      ...this.state,
+      category: {
+        ...this.state.category,
+        data: categoriesResponse,
+      },
+      product: {
+        ...this.state.product,
+        data: productsResponse,
+      },
+    });
+  }
+
+  buildProductArr() {
+    let prodArr = [];
+    for (let i = 0; i <= this.state.filteredProduct.data.length; i++) {
+      prodArr.push(this.state.filteredProduct.data[i]);
+    }
+    return prodArr;
+  }
+
+  handleEvent(event) {
+    const testName = event.target.id;
+    const categorizedProduct = this.buildFilteredCategoryProducts(testName);
+    this.setState({
+      ...this.state,
+      filteredProduct: {
+        ...this.state.filteredProduct,
+        data: categorizedProduct,
+      },
+    });
   }
 
   getCategories() {
@@ -76,15 +91,13 @@ class ProductListing extends React.Component {
     return categoryProducts;
   }
 
-   buildProductArr(){
-    for (let i=0 ; i<this.state.filteredProduct.data.length ; i++ ){
-      return this.state.filteredProduct.data[i];
-    }
-  }
-   render() {
+  render() {
     return (
       <Fragment>
         <div>{this.getCategories()}</div>
+        <h3>All products</h3>
+        <div>{this.buildCategoryProducts()}</div>
+        <h3>Categorized products</h3>
         <div>{this.buildProductArr()}</div>
       </Fragment>
     );
@@ -92,49 +105,3 @@ class ProductListing extends React.Component {
 }
 
 export default ProductListing;
-
-// class HelloWorld extendes React.Component {
-//     constructor(props){
-//     super(props);
-//     this.state ={
-//     products[{
-//     name : " ",
-//     price : " "
-//     ]}
-//     }
-
-//     function = () => {
-//     let last_planet = this.state.planets[this.state.planets.length - 1]
-//     this.setState(state => ({
-//     planets:[...this.state.planets]
-//     }))
-//     }
-
-//     incrementCount(){
-//     this.setState((state) => {return {count : state.count +1 }}
-//     }
-
-//     render(){
-//     return <h1>
-//     }
-//     }
-
-//   if(categoryName = this.props.catName) {
-
-// buildFilteredCategoryProducts(categoryParam) {
-//   //filtrar categories ( vou passar clothes e techs, aqui vc passa qual category quer)
-//   const filteredCategories = this.state.data.categories.filter(fil => fil.name === categoryParam);
-//   let categoryProducts = [];
-//   //percorrer filtered. Pode ser com for.
-//   filteredCategories.forEach(category => {
-//     //percorrer products. Pode ser com for.
-//     category.products.forEach(product => {
-//       const categoryProduct = (<div key= {product.id} >
-//         {`${category.name} ${product.id}`}
-//       </div>);
-//       //adicionando div no array. Return vai quebrar a stack e sair do loop.
-//       categoryProducts.push(categoryProduct);
-//     })
-//   })
-//   return categoryProducts;
-// }
