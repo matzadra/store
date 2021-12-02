@@ -6,19 +6,16 @@ const productsQuery =
 const productsIdQuery=
   "{categories{name, products{id}}}"
 
-function getProducts() {
-  return clientDb.request(productsQuery);
+function getAllProducts(){
+  return clientDb.request(productsQuery)
 }
 
 function getProductsId() {
     return clientDb.request(productsIdQuery);
   }
 
-function getProductsDetails(productId){
-  return clientDb.request(`{product(id:"${productId}"){id, name, inStock, description, category, brand}}`)
+ function getProductsDetails(productId){
+  return  clientDb.request(`{product(id:"${productId}"){id, name, inStock, description, category, brand}}`)
 }
 
-function getAllProducts(){
-  return clientDb.request(productsQuery)
-}
-export { getProducts, getProductsId, getProductsDetails, getAllProducts };
+export { getProductsId, getProductsDetails, getAllProducts };
