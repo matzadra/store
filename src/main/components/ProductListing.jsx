@@ -14,7 +14,7 @@ class ProductListing extends React.Component {
       category: { data: { categories: [] } },
       productsId: { data: { categories: [] } },
       filteredProducts: { data: { categories: [] } },
-      productsDetails: { data: { product: {} } },
+      productsDetails: [],
     };
     this.handleEvent = this.handleEvent.bind(this);
   }
@@ -33,10 +33,6 @@ class ProductListing extends React.Component {
         data: productsIdResponse,
       },
     });
-  }
-
-  buildProductArr(arr) {
-    return arr;
   }
 
   handleEvent = (event) => {
@@ -74,37 +70,69 @@ class ProductListing extends React.Component {
       });
     });
     this.getProductDetailsById(productsIds);
-    return productsIds;
   }
 
-  getProductDetailsById(productIdArr) {
-    productIdArr.forEach(async (productId) => {
-      const productDetails = await getProductsDetails(productId);
-      this.setState({
-        ...this.state,
-        productsDetails: {
-          ...this.state.productsDetails,
-          data: productDetails,
-        },
-      });
-      this.buildProductsList();
+  async getProductDetailsById(productIdArr) {
+    let products = [];
+    for (let i = 0; i <= productIdArr.length - 1; i++) {
+      const productDetails = await getProductsDetails(productIdArr[i]);
+      products.push(productDetails);
+    }
+    this.setState({
+      ...this.state,
+      productsDetails: products,
     });
+    this.buildProductsList();
   }
+
+  //   productIdArr.forEach(async (productId) => {
+  //     const productDetails = await getProductsDetails(productId);
+  //     products.push(productDetails);
+  //   });
+  //   this.setState({
+  //     ...this.state,
+  //     productsDetails: products,
+  //   });
+  //   console.log(this.state.productsDetails);
+
+  //   this.buildProductsList();
+  // }
+
+  // buildProductsList() {
+  //   const filteredProductsList = this.state.productsDetails;
+  //   let categoryProducts = [];
+  //   for (let a in filteredProductsList) {
+  //     const filteredIndex = filteredProductsList[a];
+  //     for (let b in filteredIndex) {
+  //       const filteredProducts = filteredIndex[b];
+  //       for (let c in filteredProducts) {
+  //         const productDetails = (
+  //           <div>{`${c} -- ${filteredProducts[c]}`}</div>
+  //         );
+  //         categoryProducts.push(productDetails);
+  //       }
+  //     }
+  //   }
+  //   return categoryProducts;
+  // }
 
   buildProductsList() {
-    const filteredProducts = this.state.productsDetails.data.product;
+    const filteredProductsList = this.state.productsDetails;
     let categoryProducts = [];
-    for (let element in filteredProducts) {
-      for (let i = 0; i <= filteredProducts.length; i++) {
-        if (filteredProducts[i].hasOwnProperty(element)) {
-          const product = (
-            <div
-              key={element}
-            >{`${element}  =  ${filteredProducts[element]}`}</div>
-          );
-          categoryProducts.push(product);
-        }
-      }
+    for (let index in filteredProductsList) {
+      const filteredProduct = filteredProductsList[index].product;
+      const productElement = (
+        <>
+          <div>{`id -- ${filteredProduct.id}`}</div>
+          <div>{`name -- ${filteredProduct.name}`}</div>
+          <div>{`in stock -- ${filteredProduct.inStock}`}</div>
+          <div>{`description -- ${filteredProduct.description}`}</div>
+          <div>{`category -- ${filteredProduct.category}`}</div>
+          <div>{`brand -- ${filteredProduct.brand}`}</div>
+          <br/>
+        </>
+      );
+      categoryProducts.push(productElement);
     }
     return categoryProducts;
   }
