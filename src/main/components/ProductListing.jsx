@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import {
   getProductsId,
   getProductsDetails,
-  getAllProducts,
 } from "../services/product";
 import { getCategoriesList } from "../services/categories";
 import styled from "styled-components";
@@ -16,7 +15,7 @@ class ProductListing extends React.Component {
       filteredProducts: { data: { categories: [] } },
       productsDetails: [],
     };
-    this.handleEvent = this.handleEvent.bind(this);
+    this.handleCategoryEvent = this.handleCategoryEvent.bind(this);
   }
 
   async componentDidMount() {
@@ -35,7 +34,7 @@ class ProductListing extends React.Component {
     });
   }
 
-  handleEvent = (event) => {
+  handleCategoryEvent = (event) => {
     const categoryId = event.target.id;
     const categorizedProduct = this.getFilteredProductsIds(categoryId);
     this.setState({
@@ -47,11 +46,11 @@ class ProductListing extends React.Component {
     });
   };
 
-  getCategories() {
+  buildCategoriesList() {
     return this.state.category.data.categories.map((element) => {
       const elName = element.name;
       return (
-        <button id={elName} key={elName} onClick={(e) => this.handleEvent(e)}>
+        <button id={elName} key={elName} onClick={(e) => this.handleCategoryEvent(e)}>
           {elName.toUpperCase()}
         </button>
       );
@@ -82,39 +81,7 @@ class ProductListing extends React.Component {
       ...this.state,
       productsDetails: products,
     });
-    this.buildProductsList();
   }
-
-  //   productIdArr.forEach(async (productId) => {
-  //     const productDetails = await getProductsDetails(productId);
-  //     products.push(productDetails);
-  //   });
-  //   this.setState({
-  //     ...this.state,
-  //     productsDetails: products,
-  //   });
-  //   console.log(this.state.productsDetails);
-
-  //   this.buildProductsList();
-  // }
-
-  // buildProductsList() {
-  //   const filteredProductsList = this.state.productsDetails;
-  //   let categoryProducts = [];
-  //   for (let a in filteredProductsList) {
-  //     const filteredIndex = filteredProductsList[a];
-  //     for (let b in filteredIndex) {
-  //       const filteredProducts = filteredIndex[b];
-  //       for (let c in filteredProducts) {
-  //         const productDetails = (
-  //           <div>{`${c} -- ${filteredProducts[c]}`}</div>
-  //         );
-  //         categoryProducts.push(productDetails);
-  //       }
-  //     }
-  //   }
-  //   return categoryProducts;
-  // }
 
   buildProductsList() {
     const filteredProductsList = this.state.productsDetails;
@@ -154,7 +121,7 @@ class ProductListing extends React.Component {
   render() {
     return (
       <Fragment>
-        <div>{this.getCategories()}</div>
+        <div>{this.buildCategoriesList()}</div>
         <h3>Categorized products</h3>
         <div>{this.buildProductsList()}</div>
       </Fragment>
